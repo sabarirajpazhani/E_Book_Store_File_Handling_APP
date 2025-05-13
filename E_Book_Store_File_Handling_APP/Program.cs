@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.Net;
 using System.Text.RegularExpressions;
 
 namespace E_Book_Store_File_Handling_APP
@@ -14,6 +16,107 @@ namespace E_Book_Store_File_Handling_APP
     }
     public class Program
     {
+        public static void DisplayAllBooks(string FilePath)
+        {
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine("--------------------------------------------------------------------------------------------------");
+            Console.ResetColor();
+
+            Console.WriteLine(
+                $"{"Book ID",-10}{"Book Name",-28}{"Book Author",-25}{"Genre",-25}{"Stock",-10}"
+            );
+
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine("--------------------------------------------------------------------------------------------------");
+            Console.ResetColor();
+
+            foreach (string i in File.ReadAllLines(FilePath))
+            {
+                string[] lines = i.Split(',');
+
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write($"{lines[0],-10}");
+                Console.ResetColor();
+
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.Write($"{lines[1],-28}");
+                Console.ResetColor();
+
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write($"{lines[2],-25}");
+                Console.ResetColor();
+
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.Write($"{lines[3],-25}");
+                Console.ResetColor();
+
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write($"{lines[5],-10}");
+                Console.ResetColor();
+
+                Console.WriteLine();
+            }
+
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine("--------------------------------------------------------------------------------------------------");
+            Console.ResetColor();
+
+            Console.WriteLine();
+        }
+
+        public static void DisplayParticularBook(string Bookid, string FilePath)
+        {
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine("--------------------------------------------------------------------------------------------------");
+            Console.ResetColor();
+
+            Console.WriteLine(
+                $"{"Book ID",-10}{"Book Name",-28}{"Book Author",-25}{"Genre",-25}{"Stock",-10}"
+            );
+
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine("--------------------------------------------------------------------------------------------------");
+            Console.ResetColor();
+
+            foreach (string i in File.ReadAllLines(FilePath))
+            {
+                string[] lines = i.Split(',');
+                if (lines[0] == Bookid)
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.Write($"{lines[0],-10}");
+                    Console.ResetColor();
+
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Console.Write($"{lines[1],-28}");
+                    Console.ResetColor();
+
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.Write($"{lines[2],-25}");
+                    Console.ResetColor();
+
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Console.Write($"{lines[3],-25}");
+                    Console.ResetColor();
+
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.Write($"{lines[5],-10}");
+                    Console.ResetColor();
+
+                    Console.WriteLine();
+
+                    break;
+                }
+                else
+                {
+                    continue;
+                }
+            }
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine("--------------------------------------------------------------------------------------------------");
+            Console.ResetColor();
+        }
+
         public static void isNullString(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
@@ -30,7 +133,7 @@ namespace E_Book_Store_File_Handling_APP
             }
         }
 
-        public static int BookId = 105;
+        //public static int BookId = 105;
 
         //static string bookContentFolder = "Description_File";
 
@@ -61,6 +164,7 @@ namespace E_Book_Store_File_Handling_APP
                 Console.WriteLine();
 
                 int Choice = 0;
+                int BookId = 1;
                 try
                 {
                     Choice:
@@ -207,7 +311,9 @@ namespace E_Book_Store_File_Handling_APP
                         Console.ResetColor();
                         Stock = Console.ReadLine();
 
-                        BookId++;
+                        var line = File.ReadLines(FilePath);
+
+                        BookId = line.Select(l => int.Parse(l.Split(',')[0])).Max() + 1;
 
                         string contentFileName = $"{BookId}.txt";
                         string contentFilePath = Path.Combine(ContentFileDirectory, contentFileName);
@@ -298,7 +404,107 @@ namespace E_Book_Store_File_Handling_APP
                         break;
 
 
+                    case 2:
+                        Console.WriteLine();
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        Console.WriteLine("                                You Enter '2' for View the all Books                             ");
+                        Console.ResetColor();
+                        Console.WriteLine();
 
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.WriteLine("--------------------------------------------------------------------------------------------------");
+                        Console.ResetColor();
+                        Console.WriteLine();
+
+                        Console.ForegroundColor = ConsoleColor.Magenta;
+                        Console.WriteLine("                                 Here are all the book details                                    ");
+                        Console.ResetColor();
+                        Console.WriteLine();
+
+                        DisplayAllBooks(FilePath);
+
+                        break;
+
+
+                    case 3:
+                        Console.WriteLine();
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        Console.WriteLine("                               You Enter '3' for View Particular Books                            ");
+                        Console.ResetColor();
+                        Console.WriteLine();
+
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.WriteLine("--------------------------------------------------------------------------------------------------");
+                        Console.ResetColor();
+                        Console.WriteLine();
+
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.Write("Enter the Book ID : ");
+                        Console.ResetColor();
+                        string Bookid = Console.ReadLine();
+
+                        Console.ForegroundColor = ConsoleColor.Magenta;
+                        Console.WriteLine($"                          Here are the book details for Book ID - {Bookid}                              ");
+                        Console.ResetColor();
+                        Console.WriteLine();
+
+                        DisplayParticularBook(Bookid, FilePath);
+                        Console.WriteLine();
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.Write($"If you want to view the description of Book ID - {Bookid} (Y/N) : ");
+                        Console.ResetColor();
+                        char ch = char.Parse( Console.ReadLine() );
+                        Console.WriteLine();
+                        if(ch == 'y' || ch == 'Y')
+                        {
+                            foreach (string i in File.ReadAllLines(FilePath))
+                            {
+                                string[] lines = i.Split(',');
+                                if(Bookid == lines[0])
+                                {
+                                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                                    Console.WriteLine($"                   -------- Here the Description of Book Id - {Bookid} ---------                 ");
+                                    Console.ResetColor();
+                                    Console.WriteLine();
+                                    string ContentFileName = $"{lines[4]}";
+                                    string ContentFilePath = Path.Combine(ContentFileDirectory, ContentFileName);
+
+                                    if (File.Exists(ContentFilePath))
+                                    {
+                                        string[] content = File.ReadAllLines(ContentFilePath);
+                                        foreach (string l in content)
+                                        {
+                                            Console.WriteLine(l);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Console.ForegroundColor = ConsoleColor.Red;
+                                        Console.WriteLine($"Description file not found: {ContentFilePath}");
+                                        Console.ResetColor();
+                                    }
+                                    Console.WriteLine();
+                                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                                    Console.WriteLine($"                   -------------------------------------------------------------                 ");
+                                    Console.ResetColor();
+                                }
+                            }
+                        }
+                        else if(ch == 'n' || ch == 'N')
+                        {
+                            Console.ForegroundColor = ConsoleColor.Blue;
+                            Console.WriteLine("Okay....");      
+                            Console.ResetColor();       
+                            Console.WriteLine();    
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("Invalid Decision! Enter the proper Decision.");
+                            Console.ResetColor();
+                            Console.WriteLine();
+                        }
+                            break;
                 }
             }
 
