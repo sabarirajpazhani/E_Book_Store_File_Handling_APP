@@ -1,7 +1,9 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Data.Common;
 using System.Net;
 using System.Text.RegularExpressions;
+using System.Transactions;
 
 namespace E_Book_Store_File_Handling_APP
 {
@@ -438,6 +440,7 @@ namespace E_Book_Store_File_Handling_APP
                         Console.ResetColor();
                         Console.WriteLine();
 
+                    ViewBook:
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.Write("Enter the Book ID : ");
                         Console.ResetColor();
@@ -453,14 +456,14 @@ namespace E_Book_Store_File_Handling_APP
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.Write($"If you want to view the description of Book ID - {Bookid} (Y/N) : ");
                         Console.ResetColor();
-                        char ch = char.Parse( Console.ReadLine() );
+                        char ch = char.Parse(Console.ReadLine());
                         Console.WriteLine();
-                        if(ch == 'y' || ch == 'Y')
+                        if (ch == 'y' || ch == 'Y')
                         {
                             foreach (string i in File.ReadAllLines(FilePath))
                             {
                                 string[] lines = i.Split(',');
-                                if(Bookid == lines[0])
+                                if (Bookid == lines[0])
                                 {
                                     Console.ForegroundColor = ConsoleColor.DarkYellow;
                                     Console.WriteLine($"                   -------- Here the Description of Book Id - {Bookid} ---------                 ");
@@ -482,20 +485,22 @@ namespace E_Book_Store_File_Handling_APP
                                         Console.ForegroundColor = ConsoleColor.Red;
                                         Console.WriteLine($"Description file not found: {ContentFilePath}");
                                         Console.ResetColor();
+                                        goto ViewBook;
                                     }
                                     Console.WriteLine();
                                     Console.ForegroundColor = ConsoleColor.DarkYellow;
                                     Console.WriteLine($"                   -------------------------------------------------------------                 ");
                                     Console.ResetColor();
                                 }
+                               
                             }
                         }
-                        else if(ch == 'n' || ch == 'N')
+                        else if (ch == 'n' || ch == 'N')
                         {
                             Console.ForegroundColor = ConsoleColor.Blue;
-                            Console.WriteLine("Okay....");      
-                            Console.ResetColor();       
-                            Console.WriteLine();    
+                            Console.WriteLine("Okay....");
+                            Console.ResetColor();
+                            Console.WriteLine();
                         }
                         else
                         {
@@ -503,8 +508,173 @@ namespace E_Book_Store_File_Handling_APP
                             Console.WriteLine("Invalid Decision! Enter the proper Decision.");
                             Console.ResetColor();
                             Console.WriteLine();
+                            goto ViewBook;
                         }
                             break;
+
+                    case 4:
+                        Console.WriteLine();
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        Console.WriteLine("                               You Enter '4' for Update Particular Books                            ");
+                        Console.ResetColor();
+                        Console.WriteLine();
+
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.WriteLine("--------------------------------------------------------------------------------------------------");
+                        Console.ResetColor();
+                        Console.WriteLine();
+
+                    Updating:
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.Write("Enter the Book ID for Updating : ");
+                        Console.ResetColor();
+                        string bookId = Console.ReadLine();
+
+                        bool Flag = false;
+                        foreach (string i in File.ReadAllLines(FilePath))
+                        {
+                            string[] lines = i.Split(',');
+                            if (lines[0] == bookId)
+                            {
+                                Flag = true;
+                                break;
+                            }
+                        }
+
+                        if (Flag)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Magenta;
+                            Console.WriteLine($"                          Here are the book details for Book ID - {bookId}                              ");
+                            Console.ResetColor();
+                            Console.WriteLine();
+
+                            DisplayParticularBook(bookId, FilePath);
+                            Console.WriteLine();
+
+                            while (true)
+                            {
+                                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                                Console.WriteLine("                         ----------  Choose an option to update ----------                        ");
+                                Console.ResetColor();
+                                Console.WriteLine();
+                                Console.WriteLine("                                        1. Update the Book Name                                   ");
+                                Console.WriteLine("                                        2. Update the Book Author                                 ");
+                                Console.WriteLine("                                        3. Update the Book Genre                                  ");
+                                Console.WriteLine("                                        4. Update the Stock                                       ");
+                                Console.WriteLine("                                        5. Exit                                                   ");
+                                Console.WriteLine();
+                                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                                Console.WriteLine("                        --------------------------------------------------                        ");
+                                Console.ResetColor();
+                                Console.WriteLine();    
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                Console.Write("Enter the Choice for Update :  ");
+                                Console.ResetColor();
+
+                                int choice = int.Parse(Console.ReadLine());
+                                List<string> lines = new List<string>(File.ReadAllLines(FilePath));
+
+                                for (int i = 0; i < lines.Count; i++)
+                                {
+                                    string[] list = lines[i].Split(',');
+                                    if (list[0].Trim() == bookId)
+                                    {
+                                        switch (choice)
+                                        {
+                                            case 1:
+                                                Console.ForegroundColor = ConsoleColor.Green;
+                                                Console.Write("Enter the Updated Book Name : ");
+                                                Console.ResetColor();
+                                                string updatedName = Console.ReadLine();
+                                                isNullString(updatedName);
+                                                isValidString(updatedName);
+                                                list[1] = updatedName;
+
+                                                Console.ForegroundColor = ConsoleColor.Blue;
+                                                Console.WriteLine("Book name has been successfully updated");
+                                                Console.ResetColor();
+                                                Console.WriteLine();
+                                                break;
+
+                                            case 2:
+                                                Console.ForegroundColor = ConsoleColor.Green;
+                                                Console.Write("Enter the Updated Book Author : ");
+                                                Console.ResetColor();
+                                                string updatedAuthor = Console.ReadLine();
+                                                isNullString(updatedAuthor);
+                                                isValidString(updatedAuthor);
+                                                list[2] = updatedAuthor;
+
+                                                Console.ForegroundColor = ConsoleColor.Blue;
+                                                Console.WriteLine("Book Author has been successfully updated");
+                                                Console.ResetColor();
+                                                Console.WriteLine();
+                                                break;
+
+                                            case 3:
+                                                Console.ForegroundColor = ConsoleColor.Green;
+                                                Console.Write("Enter the Updated Book Genre : ");
+                                                Console.ResetColor();
+                                                string updatedGenre = Console.ReadLine();
+                                                isNullString(updatedGenre);
+                                                isValidString(updatedGenre);
+                                                list[3] = updatedGenre;
+
+                                                Console.ForegroundColor = ConsoleColor.Blue;
+                                                Console.WriteLine("Genre has been successfully updated");
+                                                Console.ResetColor();
+                                                Console.WriteLine();
+                                                break;
+
+                                            case 4:
+                                                Console.ForegroundColor = ConsoleColor.Green;
+                                                Console.Write("Enter the Updated Book Stock : ");
+                                                Console.ResetColor();
+                                                string updatedStock = Console.ReadLine();
+                                                
+                                                list[4] = updatedStock;
+
+                                                Console.ForegroundColor = ConsoleColor.Blue;
+                                                Console.WriteLine("Book Stock has been successfully updated");
+                                                Console.ResetColor();
+                                                Console.WriteLine();
+                                                break;
+
+                                            case 5:
+                                                Console.ForegroundColor = ConsoleColor.Magenta;
+                                                Console.WriteLine("Thank you!");
+                                                Console.ResetColor();
+                                                Console.WriteLine();
+                                                return;
+
+                                            default:
+                                                Console.WriteLine("Invalid Choice!");
+                                                break;
+                                        }
+
+                                        lines[i] = string.Join(",", list);
+                                        File.WriteAllLines(FilePath, lines); 
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("Book Not Found :( , Re-Enter the Book ID");
+                            Console.ResetColor();
+                            Console.WriteLine();
+                            goto Updating;
+                        }
+
+                        break;
+
+
+
+
+
+
                 }
             }
 
