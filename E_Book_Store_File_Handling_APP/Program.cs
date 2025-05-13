@@ -154,9 +154,9 @@ namespace E_Book_Store_File_Handling_APP
                 Console.WriteLine("                                        1. Add the Books                                          ");
                 Console.WriteLine("                                        2. View All Books                                         ");
                 Console.WriteLine("                                        3. View Particular Book Detials                           ");
-                Console.WriteLine("                                        4. Search the Book by Author                              ");
-                Console.WriteLine("                                        5. Update the Book                                        ");
-                Console.WriteLine("                                        6. Delete the Book                                        ");
+                Console.WriteLine("                                        4. Update the Book                                        ");
+                Console.WriteLine("                                        5. Delete the Book                                        ");
+                Console.WriteLine("                                        6. Exit                                                   ");
                 Console.WriteLine();
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.WriteLine("--------------------------------------------------------------------------------------------------");
