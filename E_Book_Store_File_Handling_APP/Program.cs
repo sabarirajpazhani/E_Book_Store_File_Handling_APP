@@ -124,7 +124,7 @@ namespace E_Book_Store_File_Handling_APP
                             Console.ForegroundColor = ConsoleColor.Green;
                             Console.Write("Enter the Book Name    : ");
                             Console.ResetColor();
-                            string bookName = Console.ReadLine();
+                            string bookName = Console.ReadLine().ToLower();
 
                             isNullString(BookName);
                             isValidString(BookName);
@@ -153,7 +153,7 @@ namespace E_Book_Store_File_Handling_APP
                             Console.ForegroundColor = ConsoleColor.Green;
                             Console.Write("Enter the Author of the Book : ");
                             Console.ResetColor();
-                            String bookAuthor = Console.ReadLine();
+                            String bookAuthor = Console.ReadLine().ToLower();
 
                             isNullString(BookAuthor);
                             isValidString(BookAuthor);
@@ -181,7 +181,7 @@ namespace E_Book_Store_File_Handling_APP
                             Console.ForegroundColor = ConsoleColor.Green;
                             Console.Write("Enter the Genre of Book : ");
                             Console.ResetColor();
-                            String genre = Console.ReadLine();
+                            String genre = Console.ReadLine().ToLower();
                             isNullString(genre);
                             isValidString(genre);
 
@@ -229,6 +229,21 @@ namespace E_Book_Store_File_Handling_APP
                         Console.WriteLine("-------------------------------------------------------------------------");
                         Console.ResetColor();
                         Console.WriteLine();
+
+                        foreach (string i in File.ReadAllLines(FilePath))
+                        {
+                            string[] lines = i.Split(',');
+
+                            if (lines[1] == BookName && lines[2] == BookAuthor)
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine("This book already exists. Please re-enter the book name and details.");
+                                Console.ResetColor();
+                                Console.WriteLine();    
+                                goto BookName;
+                            }
+                        }
+
                         Console.ForegroundColor = ConsoleColor.Blue;
                         Console.WriteLine($"{contentFilePath} has been created with Description");
                         Console.ResetColor();
@@ -238,6 +253,42 @@ namespace E_Book_Store_File_Handling_APP
                         string BookDetails = $"{BookId},{BookName},{BookAuthor},{Genre},{contentFileName},{Stock}";
 
                         File.AppendAllText(FilePath, BookDetails+Environment.NewLine);
+                        Console.WriteLine();
+
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        Console.WriteLine("                          ---------- Registed Book Details ----------                             ");
+                        Console.ResetColor();
+                        Console.WriteLine();
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        Console.Write("                               Book ID          :");
+                        Console.ResetColor();
+                        Console.WriteLine(BookId);
+
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        Console.Write("                               Book Name        :");
+                        Console.ResetColor();
+                        Console.WriteLine(BookName);
+
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        Console.Write("                               Book Author      :");
+                        Console.ResetColor();
+                        Console.WriteLine(BookAuthor);
+
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        Console.Write("                               Genre            :");
+                        Console.ResetColor();
+                        Console.WriteLine(Genre);
+
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        Console.Write("                               Stock            :");
+                        Console.ResetColor();
+                        Console.WriteLine(Stock);
+                        Console.WriteLine();
+
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        Console.WriteLine("                          -------------------------------------------                             ");
+                        Console.ResetColor();
+                        Console.WriteLine();
 
                         Console.ForegroundColor = ConsoleColor.Blue;
                         Console.WriteLine("New Book has been added Successfully");
