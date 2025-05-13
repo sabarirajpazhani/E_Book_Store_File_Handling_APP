@@ -645,16 +645,20 @@ namespace E_Book_Store_File_Handling_APP
                                                 Console.WriteLine("Thank you!");
                                                 Console.ResetColor();
                                                 Console.WriteLine();
-                                                return;
+                                                break;
 
                                             default:
                                                 Console.WriteLine("Invalid Choice!");
                                                 break;
                                         }
 
+                                        if(choice == 5)
+                                        {
+                                            break;
+                                        }
+
                                         lines[i] = string.Join(",", list);
                                         File.WriteAllLines(FilePath, lines); 
-                                        break;
                                     }
                                 }
                             }
@@ -670,11 +674,93 @@ namespace E_Book_Store_File_Handling_APP
 
                         break;
 
+                    case 5:
 
+                        Console.WriteLine();
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        Console.WriteLine("                               You Enter '5' for Delete Particular Books                            ");
+                        Console.ResetColor();
+                        Console.WriteLine();
 
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.WriteLine("--------------------------------------------------------------------------------------------------");
+                        Console.ResetColor();
+                        Console.WriteLine();
 
+                    DeleteBook:
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.Write("Enter the Book ID to delete: ");
+                        Console.ResetColor();
+                        string bookid = Console.ReadLine();
 
+                        var books = File.ReadAllLines(FilePath).ToList();
+                        bool bookFound = books.Any(x => x.Split(',')[0] == bookid);
 
+                        if (bookFound)
+                        {
+                            var updatedDetails = books.Where(x => x.Split(',')[0] != bookid).ToList();
+
+                            string deletedFilePath = Path.Combine(ContentFileDirectory, bookid + ".txt");
+                            if (File.Exists(deletedFilePath))
+                            {
+                                File.Delete(deletedFilePath);
+                            }
+
+                            File.WriteAllLines(FilePath, updatedDetails);
+
+                            Console.ForegroundColor = ConsoleColor.Blue;
+                            Console.WriteLine($"Book ID - {bookid} was deleted successfully 🙂");
+                            Console.ResetColor();
+                            Console.WriteLine();
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("Book ID not found. Please re-enter the Book ID.");
+                            Console.ResetColor();
+                            Console.WriteLine();
+                            goto DeleteBook;
+                        }
+
+                        break;
+
+                    case 6:
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.WriteLine("-------------------------------------------------------------");
+                        Console.ResetColor();
+                        Console.WriteLine();
+                        Console.WriteLine();
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("                     You Choose to Exist :)                  ");
+                        Console.ResetColor();
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.WriteLine("-------------------------------------------------------------");
+                        Console.ResetColor();
+                        Console.WriteLine();
+                        Console.WriteLine();
+
+                        for (int i = 5; i > 0; i--)
+                        {
+                            Console.Clear();
+                            Console.ForegroundColor = ConsoleColor.Cyan;
+                            Console.Write("                 Existing : ");
+                            Console.ResetColor();
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine($" {i} ");
+                            Console.ResetColor();
+                            Thread.Sleep(1000);
+                        }
+                        break;
+                }
+                if (Choice == 6)
+                {
+
+                    Console.Clear();
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Console.WriteLine("                      ~ * Thank You * ~                    ");
+                    Console.ResetColor();
+                    Console.ReadKey();
+                    break;
                 }
             }
 
